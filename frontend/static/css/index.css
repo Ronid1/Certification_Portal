@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+:root {
+    --zipline-red: #e73c3e;
+    /*TO DO - font not working*/
+    font-family: 'Roboto', sans-serif;
+    margin-top: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+
+a:link{
+  text-decoration: none;
+}
+
+/* TO DO - navbar dropdown color after selection
+.dropdown-item:link{
+  background-color: var(--zipline-red);
+} */
+
+.navbar-custom {
+    background-color: var(--zipline-red);
+  }
+
+#btn-primary {
+    background-color: var(--zipline-red);
+    border-color: var(--zipline-red);
+}
+
+#training-bar {
+  background-color: var(--zipline-red);
+  border-color: var(--zipline-red);
+  width: 100%;
+}
+
+#link-box{ 
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#train{
+  background-color: var(--zipline-red);
+  border-color: var(--zipline-red);
+}
+
+#link{
+  color: var(--zipline-red);
+}
