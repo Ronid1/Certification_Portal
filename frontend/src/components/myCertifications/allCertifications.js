@@ -25,16 +25,15 @@ function AllCertifications(){
       let data;
       let certList = [];
 
-      const size = certifications.length;
       //add certification component to list
-      for (let i = 0; i < size ; i++) {
+      for (let cert of certifications) {
         //if a cert is practical and pending or fail status - dont include it
-        if (certifications[i].practical && certifications[i].level!='Pass'){
+        if (cert.practical && cert.level!='Pass'){
           continue;
         }
 
-        data = {name: certifications[i].name, level: certifications[i].level, date: certifications[i].created_on_date}
-        certList.push(<CertificationBox key={i} data = {data} />)
+        data = {name: cert.name, level: cert.level, date: cert.created_on_date}
+        certList.push(<CertificationBox key={cert.id} data = {data} />)
       }
   
       // TO DO:

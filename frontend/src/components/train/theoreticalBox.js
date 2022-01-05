@@ -25,14 +25,12 @@ function TheoreticalBox ({data}) {
         let tempList = [];
 
         await trainings.findByCertId(certification).then(res => {
-            let size = res.length
-
-            for (let i = 0; i < size; i++){
-                tempList[i] = {
-                    id: res[i].id,
-                    name: res[i].name,
-                    file: res[i].file
-                }
+            for (let element of res){
+                tempList.push({
+                    id: element.id,
+                    name: element.name,
+                    file: element.file
+                })
             }
 
             setTrainingsList(tempList);
@@ -41,10 +39,9 @@ function TheoreticalBox ({data}) {
 
     //create editTraining componenets to render
     function createComponents(){
-        let size = trainingsList.length;
         let tempList = [];
-        for (let i = 0; i < size; i++){
-            tempList.push(<EditTraining key={i} data={trainingsList[i]} />)
+        for (let training of trainingsList){
+            tempList.push(<EditTraining key={training.id} data={training} />)
         }
 
         setComponentList(tempList)

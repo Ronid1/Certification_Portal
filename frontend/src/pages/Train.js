@@ -25,15 +25,16 @@ function Train () {
 
   async function getTrainingInfo(){
     let certification = new CertificationsActions();
+
     if (!instructor_for){
       return setCertificationsList(null);
     }
 
-    let size = instructor_for.length;
     let temp = [];
-    for (let i = 0; i < size ; i++){
-      await certification.getId(instructor_for[i]).then(res => {
-        temp.push({certification_id: instructor_for[i], practical:res.practical, name: res.name})
+
+    for (let training of instructor_for){
+      await certification.getId(training).then(res => {
+        temp.push({certification_id: training, practical:res.practical, name: res.name})
       })
     }
     setCertificationsList(temp);
@@ -44,14 +45,13 @@ function Train () {
       return setElementList(<p>you are not an instructor</p>);
     }
 
-    let size = certificationList.length;
     let temp = [];
-    for (let i = 0; i < size ; i++){
-      if (certificationList[i].practical)
-        temp.push(<PracticalBox key={i} data={{cert_id: certificationList[i].certification_id, name: certificationList[i].name}} />)
+    for (let cert of certificationList){
+      if (cert.practical)
+        temp.push(<PracticalBox key={cert.certification_id} data={{cert_id: cert.certification_id, name: cert.name}} />)
       
       else
-        temp.push(<TheoreticalBox key={i} data={{cert_id: certificationList[i].certification_id, name: certificationList[i].name}} />)
+        temp.push(<TheoreticalBox key={cert.certification_id} data={{cert_id: cert.certification_id, name: cert.name}} />)
     }
     setElementList(temp);
   }

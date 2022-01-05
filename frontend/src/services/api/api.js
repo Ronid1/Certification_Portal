@@ -86,13 +86,13 @@ export class Api {
         if (id == undefined)
             data = this.getAll().then(res => {
                 //return array with wanted data
-                return this.printableDataHook(res, res.length, false);
+                return this.printableDataHook(res);
             });
         
         else
            data = this.getId(id).then(res => {
                 //return array with wanted data
-                return this.printableDataHook(res, 1, true);
+                return this.printableDataHook([res]);
             });
 
         const result = await data;

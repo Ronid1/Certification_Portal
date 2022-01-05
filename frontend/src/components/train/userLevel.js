@@ -29,13 +29,12 @@ function UserLevel({data}) {
     }
 
     function addLevelstoList(){
-        let size = levels.length;
-        for (let i=0; i<size; i++){
+        for (let level of levels){
             levelDropDown.push(
                 <Dropdown.Item 
-                    key={i} 
-                    onClick={()=>changeLevel(levels[i].level)}>
-                        {levels[i].level}
+                    key={level.level} 
+                    onClick={()=>changeLevel(level.level)}>
+                        {level.level}
                 </Dropdown.Item>)     
         }
     }

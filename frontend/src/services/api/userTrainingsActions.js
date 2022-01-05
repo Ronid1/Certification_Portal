@@ -15,26 +15,19 @@ export class UserTrainingsActions extends Api{
     }
 
     async printableDataHook(dataArray, size, byId){
+        
         let profilesList = new ProfilesActions();
         let modulesList = new TrainingModulesActions();
         
-        let printableData = [size];
-        let id; let name; let training_id; let training_name;
-        let completed; let cert_id;
+        //let printableData = [size];
+        let printableData = [];
+        let id; let name; let training_id; let training_name; let cert_id;
         // return [user name, certification name, training name, completed] 
-        for (let i = 0; i < size; i++)
-        {
-            if (byId){
-                id = dataArray.user_id
-                training_id = dataArray.training_id
-                completed = dataArray.completed
-            }
 
-            else{
-                id = dataArray[i].user_id
-                training_id = dataArray[i].training_id
-                completed = dataArray[i].completed
-            }
+        for (let data of dataArray){
+            id = data.user_id
+            training_id = data.training_id
+
 
             //find name for user_id
             await profilesList.getId(id).then(res => {
@@ -47,14 +40,48 @@ export class UserTrainingsActions extends Api{
                 cert_id = res.certification_id
             })
 
-            printableData[i]=({
+            printableData.push({
                 user_id: id,
                 user_name: name,
                 certification_id: cert_id,
                 training_id: training_id,
                 training_name: training_name,
-                completed: completed})
+                completed: data.completed})
         }
+
+        // for (let i = 0; i < size; i++)
+        // {
+        //     if (byId){
+        //         id = dataArray.user_id
+        //         training_id = dataArray.training_id
+        //         completed = dataArray.completed
+        //     }
+
+        //     else{
+        //         id = dataArray[i].user_id
+        //         training_id = dataArray[i].training_id
+        //         completed = dataArray[i].completed
+        //     }
+
+        //     //find name for user_id
+        //     await profilesList.getId(id).then(res => {
+        //         name = res.user_name
+        //     })
+
+        //     //find training name for training_id
+        //     await modulesList.getId(training_id).then(res => {
+        //         training_name = res.name
+        //         cert_id = res.certification_id
+        //     })
+
+        //     printableData[i]=({
+        //         user_id: id,
+        //         user_name: name,
+        //         certification_id: cert_id,
+        //         training_id: training_id,
+        //         training_name: training_name,
+        //         completed: completed})
+        // }
         return printableData;
     }
 }

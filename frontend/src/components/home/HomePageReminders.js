@@ -29,31 +29,31 @@ function HomePageReminders() {
         let data; let i = 0;
         let reminderList = [];
 
-        const size = trainings.length;
         //check if trainings is complete - if not, add to list of reminders
-        for (i; i < size ; i++)
+        for (let training of trainings)
         {
             //training not completed -> add to stack
-            if (!trainings[i].completed) {
-                data = {type: !CERT, name: trainings[i].name, days: null}
+            if (!training.completed) {
+                data = {type: !CERT, name: training.name, days: null}
                 reminderList.push(<Reminder key={i} data = {data} />)
             }
+
+            i++;
         }
 
         //check if certifications is about to expire. if yes - add to list of reminders
         let days;
-        const certsSize = certifications.length-1 + i;
-        for (i; i < certsSize ; i++)
+        for (let cert of certifications)
         {
-            days = certifications[certsSize-i].days_until_expires
+            days = cert.days_until_expires
             //certificaion expiring soon -> add to stack
             if ( days < 30) {
-                data = {type: CERT, name: certifications[certsSize-i].name, days: days}
+                data = {type: CERT, name: cert.name, days: days}
                 reminderList.push(<Reminder key={i} data = {data} />)
             }
+
+            i++;
         }
-
-
 
         return reminderList;
     }

@@ -46,11 +46,10 @@ function LoginForm() {
     });
 
     //get cert_id user is an instructor for
-    await instructor.findByUserId(id).then( res => {
-      if(res){
-        let size = res.length
-        for (let i = 0; i < size; i++)
-          instructorFor[i] = res[i].certification_id
+    await instructor.findByUserId(id).then( response => {
+      if(response){
+        for (let res of response)
+          instructorFor.push(res.certification_id)
       }
     })
 

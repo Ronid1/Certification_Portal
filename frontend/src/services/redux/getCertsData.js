@@ -22,26 +22,16 @@ function getCertsData(){
 
   async function getData(){
     let userCerts = new UserCertificationsActions();
-    let thisUserCerts = new UserCertificationsActions();
+    // let thisUserCerts = new UserCertificationsActions();
 
     //get certifications user has
-    await userCerts.findByUserId(id).then( res => {
-      let size = res.length
-
-      for (let i = 0; i < size; i++){
-        idsList[i] = res[i].id
-      }
-
+    await userCerts.findByUserId(id).then(response => {
+      for (let res of response)
+        idsList.push(res.id)
     });
 
-    let size = idsList.length;
-    let user_cert_id;
-
-    //get all data for each certifiction user has
-    for (let i = 0; i < size; i++){
-      user_cert_id = idsList[i];
-      
-        await thisUserCerts.printableData(user_cert_id).then( ans => {
+      for (let user_cert_id of idsList){
+        await userCerts.printableData(user_cert_id).then( ans => {
 
           setCertsList (oldList=> [...oldList, {
             id: ans[0].certification_id,

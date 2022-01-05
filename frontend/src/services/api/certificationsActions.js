@@ -22,10 +22,13 @@ export class CertificationsActions extends Api{
         let getlevels = new LevelActions();
 
         await getlevels.findByScale(scale).then(res => {
-            let size = res.length;
-            for (let i=0; i<size ; i++){
-                data[i] = {id: res[i].id, level:res[i].level}
+            for (let element of res){
+                data.push({id:element.id, level:element.level})
             }
+            // let size = res.length;
+            // for (let i=0; i<size ; i++){
+            //     data[i] = {id: res[i].id, level:res[i].level}
+            // }
         })
         return data;
     }
@@ -34,17 +37,29 @@ export class CertificationsActions extends Api{
     //EDIT - not array option
     async printableDataHook(dataArray, size) {
 
-        let printableData = [size];
+        let printableData=[];
 
-        for (let i = 0; i < size; i++)
-        {
-            printableData[i]=({
-                id: dataArray[i].id,
-                name: dataArray[i].name,
-                part: dataArray[i].part,
-                level_scale: dataArray[i].level_scale,
-                days_valid: dataArray[i].days_valid})
-        }
+        for (let data of dataArray)
+            printableData.push({
+                id: data.id,
+                name: data.name,
+                part: data.part,
+                level_scale: data.level_scale,
+                days_valid: data.days_valid})
+
+        
+
+        // let printableData = [size];
+
+        // for (let i = 0; i < size; i++)
+        // {
+        //     printableData[i]=({
+        //         id: dataArray[i].id,
+        //         name: dataArray[i].name,
+        //         part: dataArray[i].part,
+        //         level_scale: dataArray[i].level_scale,
+        //         days_valid: dataArray[i].days_valid})
+        // }
 
         return printableData;
     }

@@ -9,7 +9,6 @@ function GetCertified() {
 
   let [theoreticalCert, setTheoreticalCert] = useState([]);
   let certifications = useSelector((state) => state.certifications.value.certifications);
-  //let trainings = useSelector((state) => state.certifications.value.trainings);
 
   getCertsData();
   getTrainingsData();
@@ -22,12 +21,11 @@ function GetCertified() {
     let tempList = []; let data;
 
     //check if certifications is theoretical
-    const certsSize = certifications.length;
-    for (let i = 0; i < certsSize ; i++)
+    for (let cert of certifications)
     {
-        if (!certifications[i].practical) {
-            data = {id: certifications[i].id, name: certifications[i].name}
-            tempList.push(<CertificationBox key={i} data={data}/>)
+        if (!cert.practical) {
+            data = {id: cert.id, name: cert.name}
+            tempList.push(<CertificationBox key={cert.id} data={data}/>)
         }
     }
 

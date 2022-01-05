@@ -34,16 +34,15 @@ function PracticalBox ({data}) {
 
     function addToUserLevelList(){
         let data;
-        let size = usersList.length
         let temp = [];
 
-        for (let i = 0; i < size; i++){
+        for (let user of usersList){
             data={
-                user_name: usersList[i].user_name, 
+                user_name: user.user_name, 
                 id: certification, 
-                level: usersList[i].level}
+                level: user.level}
             
-            temp.push(<UserLevel key={i} data={data} />)
+            temp.push(<UserLevel key={user.level} data={data} />)
         }
         setUserLevelList(temp);
     }
@@ -52,32 +51,29 @@ function PracticalBox ({data}) {
     //for each user get id and level
     async function getUsersWithCert(){
 
-        let usersWithCertification = [];
+        let usersLevelsList = [];
 
         const userCerts = new UserCertificationsActions();
         await userCerts.findByCertificationId(certification).then(res => {
-            let size = res.length;
-            for (let i=0; i<size; i++){
-                usersWithCertification[i]={
-                    user_id: res[i].user_id,
-                    level: res[i].level
-                }
+            for (let element of res){
+                usersLevelsList.push({
+                    user_id: element.user_id,
+                    level: element.level
+                })
             }
         })
-        let userSize = usersWithCertification.length;
         const profile = new ProfilesActions();
-
+        let usersWithCertification = []
         //get user name
-        for (let i = 0; i < userSize; i++){
-            await profile.getId(usersWithCertification[i].user_id).then(res =>{
-                usersWithCertification[i]={
-                    user_id: usersWithCertification[i].user_id,
-                    level: usersWithCertification[i].level,
+        for (let user of usersLevelsList){
+            await profile.getId(user.user_id).then(res =>{
+                usersWithCertification.push({
+                    user_id: user.user_id,
+                    level: user.level,
                     user_name: res.user_name
-                }
+                })
             })
         }
-
         setUsersList(usersWithCertification)
     }
 

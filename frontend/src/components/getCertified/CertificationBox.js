@@ -24,7 +24,7 @@ function CertificationBox({data}) {
         let data;
         let tempList = [];
 
-        //add all trainings fot this certification to list
+        //add all trainings for this certification to list
         for (let i = 0; i < numOfTrainings ; i++)
         {
             if (trainings[i].certification_id == certId){
