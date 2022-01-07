@@ -2,7 +2,8 @@ import React, {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
+import Ratio from 'react-bootstrap/Ratio';
 
 
 function TrainingBar({data}) {
@@ -27,7 +28,11 @@ function TrainingBar({data}) {
                 <Modal.Header closeButton>
                     <Modal.Title>{data.name}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{data.file}</Modal.Body>
+                <Modal.Body>
+                <Ratio aspectRatio="16x9">
+                <embed type="text/html" src={data.link} />
+                </Ratio>
+                </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={markAsDone}>Complete Training</Button>
                 </Modal.Footer>

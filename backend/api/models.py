@@ -52,11 +52,6 @@ class UserCertifications(models.Model):
         daysValid = Certification.objects.filter(id=self.certification_id_id).values("days_valid")
         days = daysValid[0].get("days_valid")
         return self.created_on_date + timedelta(days=days)
-    
-    #returns if a certifiation is still valid (not expired)
-    @property
-    def valid(self):
-        return self.expiration_date > date.today()
 
     @property
     def days_until_expires(self):

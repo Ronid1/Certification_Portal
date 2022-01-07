@@ -18,21 +18,17 @@ function GetCertified() {
   }, [certifications])
 
   function addToList() {
-    let tempList = []; let data;
-
+    let certList = []; let data;
     //check if certifications is theoretical
-    for (let cert of certifications)
-    {
+    for (let cert of certifications){
         if (!cert.practical) {
             data = {id: cert.id, name: cert.name}
-            tempList.push(<CertificationBox key={cert.id} data={data}/>)
+            certList.push(<CertificationBox key={cert.id} data={data}/>)
         }
     }
 
-    return tempList;
+    return certList;
 }
-
-
 
   return (
     <div>

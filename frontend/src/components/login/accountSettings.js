@@ -10,7 +10,6 @@ function AccountSetting(props) {
     const [newPassword, setNewPassword] = useState("");
     const [oldPassword, setOldPassword] = useState("");
 
-    //choose pic, submit -> post to database
     function save() {
         console.log(id)
         const user = new UserActions();

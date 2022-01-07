@@ -51,6 +51,7 @@ export class TrainingModulesActions extends Api{
             printableData.push({
                 id: data.id,
                 name: data.name,
+                link: data.link,
                 certification_id: cert_id,
                 certification_name: cert_name})
         }

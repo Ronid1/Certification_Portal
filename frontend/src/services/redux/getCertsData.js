@@ -32,7 +32,6 @@ function getCertsData(){
 
       for (let user_cert_id of idsList){
         await userCerts.printableData(user_cert_id).then( ans => {
-
           setCertsList (oldList=> [...oldList, {
             id: ans[0].certification_id,
             name: ans[0].certification_name,

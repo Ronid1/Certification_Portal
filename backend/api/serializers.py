@@ -46,7 +46,7 @@ class InstructorsSerializer(serializers.ModelSerializer):
 class UserCertificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCertifications
-        fields = ["id", "certification_id", "user_id", "level", "created_on_date", "expiration_date", "valid", "days_until_expires"]
+        fields = ["id", "certification_id", "user_id", "level", "created_on_date", "expiration_date", "days_until_expires"]
 
 class TrainingModuleSerializer(serializers.ModelSerializer):
     class Meta:

@@ -23,12 +23,11 @@ function CertificationBox({data}) {
     function addToList() {
         let data;
         let tempList = [];
-
         //add all trainings for this certification to list
         for (let i = 0; i < numOfTrainings ; i++)
         {
             if (trainings[i].certification_id == certId){
-                data = {name: trainings[i].name, status: trainings[i].completed, file: null}
+                data = {name: trainings[i].name, status: trainings[i].completed, link: trainings[i].link}
                 tempList.push(<TrainingBar key={i} data = {data} />)
                 
                 if (trainings[i].completed)
@@ -36,7 +35,7 @@ function CertificationBox({data}) {
             }
 
         }
-
+        //console.log(tempList)
         return tempList;
     }
 

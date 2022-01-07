@@ -39,6 +39,7 @@ function getTrainingsData(){
             training_id: ans[0].training_id,
             certification_id: ans[0].certification_id,
             name: ans[0].training_name,
+            link: ans[0].link,
             completed: ans[0].completed}
           ]);
         })

@@ -29,6 +29,7 @@ export class UserActions extends Api{
     async changePassword(id, oldPassword, newPassword) {
         //check if oldPassword excisted
         console.log("setting password")
+        console.log("id="+id+" old password="+oldPassword+" new password="+newPassword)
         try{
             await client.get(this.endpoint + "/?id="+ {id} + "&password=" + oldPassword ).then( res =>{
                 console.log(res)
