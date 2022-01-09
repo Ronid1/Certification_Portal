@@ -5,23 +5,16 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "password", "email"]
+        #fields = '__all__'
+        fields = ["id", "password", "email", "username"]
+        # extra_kwargs = {
+        #     "username": {User.objects}
+        # }
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ["user_id", "user_name", "is_admin", "role", "image", "certifications"]
-        #add fields that are not requierd on post??
-        #https://www.youtube.com/watch?v=PqkvRz1sLF8 (26:30)
-        # extra_kwargs = {
-        #     "id": {"required": False}
-        # }
-
-# class PartSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Part
-#         #fields = ('id', 'part_number', 'revision', 'aircraft_model')
-#         fields = '__all__'
 
 class CertificationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,7 +29,7 @@ class LevelsSerializer(serializers.ModelSerializer):
 class ScalesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CertificationScales
-        fields = '__all__'
+        fields = ["id", "scale_name", "levels"]
 
 class InstructorsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,7 +39,7 @@ class InstructorsSerializer(serializers.ModelSerializer):
 class UserCertificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCertifications
-        fields = ["id", "certification_id", "user_id", "level", "created_on_date", "expiration_date", "days_until_expires"]
+        fields = ["id", "certification_id", "user_id", "level", "created_on_date", "expiration_date", "days_until_expires", "entered_level"]
 
 class TrainingModuleSerializer(serializers.ModelSerializer):
     class Meta:

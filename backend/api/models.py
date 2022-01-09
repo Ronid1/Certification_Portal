@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import User
 from django.db.models.deletion import CASCADE
 from datetime import date, timedelta
 from django.core.validators import validate_image_file_extension, URLValidator
@@ -16,7 +16,7 @@ class CertificationScales(models.Model):
     scale_name = models.CharField(max_length=50, unique=True)
 
 class CertificationLevels(models.Model):
-    scale = models.ForeignKey(CertificationScales, to_field='scale_name', on_delete=models.CASCADE)
+    scale = models.ForeignKey(CertificationScales, related_name='levels', on_delete=models.CASCADE)
     level = models.CharField(max_length=20, unique=True)
 
 class Certification(models.Model):
@@ -24,27 +24,51 @@ class Certification(models.Model):
     practical = models.BooleanField(default=True)
     level_scale = models.ForeignKey(CertificationScales, to_field='scale_name', on_delete=models.CASCADE)
     days_valid = models.IntegerField(default=365)
-
-    #make level scale a function based on prectical
-
-    def __str__(self):
-        return self.name
  
 class Instructors(models.Model):
     user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
     certification_id = models.ForeignKey(Certification, on_delete=models.CASCADE)
  
 class UserCertifications(models.Model):
-    #use user id & certification id as primary keys
     certification_id = models.ForeignKey(Certification, related_name='users', on_delete=models.CASCADE)
     user_id = models.ForeignKey(Profile, related_name='certifications', on_delete=models.CASCADE)
-    level = models.ForeignKey(CertificationLevels, to_field='level', on_delete=models.CASCADE) #only show levels associated to certifications
-    created_on_date = models.DateField(default=date.today) #update after going up a level
-
+    entered_level = models.ForeignKey(CertificationLevels, to_field='level', on_delete=models.CASCADE)
+    created_on_date = models.DateField(auto_now=True)
     #https://docs.djangoproject.com/en/4.0/topics/db/models/
 
-    #make level a choise based on level scale
-        #if not practical - level is pending. or pass if all trainings complete
+    class Meta:
+        unique_together = ['certification_id', 'user_id']
+
+    @property
+    def level(self):
+        #if certification expired - level is expired
+        if self.days_until_expires < 0:
+            return "Expired"
+
+        #if cert is not practical and level scale is pass/fail -> if all trainings are completed - pass, otherwise - pending
+        certification = Certification.objects.filter(id=self.certification_id_id)
+
+        if ((not certification.values("practical")[0].get("practical")) and (certification.values("level_scale")[0].get("level_scale")=="Pass/Fail")):
+            for training in certification.values("trainings"):
+                training_id = training.get("trainings")
+                userTrainingStat = UserTraining.objects.filter(training_id=training_id, user_id=self.user_id).values("completed")
+                #at least one training is not completed
+                if (not userTrainingStat[0].get("completed")):
+                    return "Pending"
+            
+            #all trainings are completed
+            return "Pass"
+
+        #check that entered level is part of certifications level scale, otherwise return "None"
+        scale = certification.values("level_scale")
+        levelScale = scale.values("level_scale")[0].get("level_scale")
+        scaleId = CertificationScales.objects.filter(scale_name=levelScale).values("id")
+        levels = CertificationLevels.objects.filter(scale=scaleId[0].get("id"))
+        for level in levels.values("level"):
+            if self.entered_level_id == level.get('level'):
+                return self.entered_level_id
+
+        return "None"
 
     #returns user certification expiration date
     @property
@@ -64,9 +88,9 @@ class TrainingModule(models.Model):
 
 class UserTraining(models.Model):
     user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    #user_certification = models.ForeignKey(UserCertifications, related_name='trainings_stats', on_delete=models.CASCADE)
+    user_certification = models.ForeignKey(UserCertifications, related_name='trainings_stats', on_delete=models.CASCADE)
     training_id = models.ForeignKey(TrainingModule, related_name='users', on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
 
-    #get user id from training->cert->user-cert
-
+    class Meta:
+        unique_together = ['user_id', 'training_id']
