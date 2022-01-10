@@ -16,6 +16,9 @@ def ensure_profile_exists(sender, **kwargs):
 def create_user_training(sender, **kwargs):
     if kwargs.get('created', False):
         for training in (Certification.objects.filter(id=kwargs.get('instance').certification_id_id).values("trainings")):
+            if (not training.get("trainings")):
+                break
+            
             UserTraining.objects.get_or_create(
                 user_certification=kwargs.get('instance'), 
                 user_id=kwargs.get('instance').user_id, 

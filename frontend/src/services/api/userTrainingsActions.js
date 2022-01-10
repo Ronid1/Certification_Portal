@@ -18,19 +18,19 @@ export class UserTrainingsActions extends Api{
         
         let profilesList = new ProfilesActions();
         let modulesList = new TrainingModulesActions();
-        
         //let printableData = [size];
         let printableData = [];
-        let id; let name; let training_id; let training_name; let cert_id; let link;
+        let id; let user_id; let name; let training_id; let training_name; let cert_id; let link;
         // return [user name, certification name, training name, completed] 
 
         for (let data of dataArray){
-            id = data.user_id
+            id = data.id
+            user_id = data.user_id
             training_id = data.training_id
 
 
             //find name for user_id
-            await profilesList.getId(id).then(res => {
+            await profilesList.getId(user_id).then(res => {
                 name = res.user_name
             })
 
@@ -42,7 +42,8 @@ export class UserTrainingsActions extends Api{
             })
 
             printableData.push({
-                user_id: id,
+                id: id,
+                user_id: user_id,
                 user_name: name,
                 certification_id: cert_id,
                 training_id: training_id,

@@ -12,6 +12,7 @@ export class UserActions extends Api{
         super(ENDPOINT)
     }
 
+    //login user to system using email and password
     async login(email, password) {
         let user;
         
@@ -26,23 +27,28 @@ export class UserActions extends Api{
         }
     }
 
+    //change users password by matching old password to current password and then setting new password
     async changePassword(id, oldPassword, newPassword) {
         //check if oldPassword excisted
-        console.log("setting password")
-        console.log("id="+id+" old password="+oldPassword+" new password="+newPassword)
+        let success = true;
         try{
-            await client.get(this.endpoint + "/?id="+ {id} + "&password=" + oldPassword ).then( res =>{
-                console.log(res)
-                let temp = res;
+            await client.get(this.endpoint + "/?id="+ id + "&password=" + oldPassword ).then( res =>{ 
+                if (res.data.length < 1)
+                    success = false
             });
         }
         catch{
-            return null;
+            return false;
         }
 
-        let data = {password: newPassword}
+        //failuer
+        if (!success)
+            return false
+
         //change password
-        let ans = updateIdWithData(id, data)
-        console.log(ans)
+        await this.updateIdWithData(id, {password: newPassword})
+        
+        //success
+        return true;
     }
 }

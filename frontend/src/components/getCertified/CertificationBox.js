@@ -10,15 +10,18 @@ function CertificationBox({data}) {
     const certId = data.id;
     let [now, setNow] = useState(0);
     let [trainingList, setTrainingList] = useState([]);
-    let [done, setDone] = useState(0);
     let trainings = useSelector((state) => state.certifications.value.trainings);  
   
     const numOfTrainings = trainings.length;
-
     useEffect(() => {
         setTrainingList(addToList());
-        setNow(done/numOfTrainings);
-    }, [trainings, done])
+
+        let done = 0;
+        for (let training of trainings)
+            training.completed ? done++: null
+
+        setNow(Math.round((done/numOfTrainings)*100));
+    }, [trainings])
 
     function addToList() {
         let data;
@@ -27,15 +30,11 @@ function CertificationBox({data}) {
         for (let i = 0; i < numOfTrainings ; i++)
         {
             if (trainings[i].certification_id == certId){
-                data = {name: trainings[i].name, status: trainings[i].completed, link: trainings[i].link}
+                data = {user_training_id: trainings[i].user_training_id, name: trainings[i].name, status: trainings[i].completed, link: trainings[i].link}
                 tempList.push(<TrainingBar key={i} data = {data} />)
-                
-                if (trainings[i].completed)
-                    setDone(done+1);
             }
 
         }
-        //console.log(tempList)
         return tempList;
     }
 

@@ -10,7 +10,7 @@ class ScaleList(generics.ListCreateAPIView):
      queryset = CertificationScales.objects.all()
      permission_classes = [permissions.AllowAny]
      serializer_class = ScalesSerializer
-     #filter_fields = ['name']
+     filter_fields = ['scale_name']
 
 class ScaleDetail(generics.RetrieveUpdateDestroyAPIView):
      queryset = CertificationScales.objects.all()

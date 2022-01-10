@@ -4,15 +4,23 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
 import Ratio from 'react-bootstrap/Ratio';
+import { UserTrainingsActions } from "../../services/api/userTrainingsActions";
 
 
 function TrainingBar({data}) {
     const [trainingVisable, setTrainingVisable] = useState(false)
-
+    let [done, setDone] = useState(data.status);
+    
     function markAsDone(){
-        //mark training done in backend
-        //change statue to done in redux
-        //change from pending to done
+        let thisTraining = new UserTrainingsActions();
+        let userTraining = data.user_training_id;
+        //update data in Db
+        thisTraining.updateIdWithData(userTraining, {completed: true})
+
+        //change status to done
+        setDone(true);
+
+        setTrainingVisable(false)
     }
 
     return(
@@ -20,7 +28,7 @@ function TrainingBar({data}) {
             <Button id="training-bar" onClick={() => setTrainingVisable(true)}>
                 <Row>
                     <Col>{data.name}</Col>
-                    <Col>{data.status ? "Completed" : "Pending"}</Col>
+                    <Col>{done ? "Completed" : "Pending"}</Col>
                 </Row>
             </Button>
 

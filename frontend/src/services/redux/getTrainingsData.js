@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import {UserTrainingsActions} from "../api/userTrainingsActions"
+import { UserTrainingsActions } from "../api/userTrainingsActions"
 import { getTrainings } from "../redux/certificationsSlice";
 
 function getTrainingsData(){
@@ -27,15 +27,14 @@ function getTrainingsData(){
 
     //get trainings user has: (training id)
     await userTrainings.findByUserId(user_id).then( response => {
-
       for (let res of response)
         idsList.push(res.id)
     });
-    
     //get all data for each training user has
     for (let id of idsList){
       await thisUserTrainings.printableData(id).then( ans => {
           setTrainingList (oldList=> [...oldList, {
+            user_training_id: id,
             training_id: ans[0].training_id,
             certification_id: ans[0].certification_id,
             name: ans[0].training_name,

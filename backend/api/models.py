@@ -10,7 +10,7 @@ class Profile(models.Model):
     user_name = models.CharField(max_length=80)
     is_admin = models.BooleanField(default=False)
     role = models.CharField(max_length=80)
-    image = models.ImageField(upload_to='images/', validators=[validate_image_file_extension], height_field=None, width_field=None, max_length=100, null=True, default = 'null')
+    image = models.ImageField(upload_to='static/', validators=[validate_image_file_extension], height_field=None, width_field=None, max_length=100, null=True, default = 'null')
 
 class CertificationScales(models.Model):
     scale_name = models.CharField(max_length=50, unique=True)
@@ -46,16 +46,15 @@ class UserCertifications(models.Model):
             return "Expired"
 
         #if cert is not practical and level scale is pass/fail -> if all trainings are completed - pass, otherwise - pending
-        certification = Certification.objects.filter(id=self.certification_id_id)
-
+        certification = Certification.objects.filter(id=self.certification_id_id).distinct()
         if ((not certification.values("practical")[0].get("practical")) and (certification.values("level_scale")[0].get("level_scale")=="Pass/Fail")):
             for training in certification.values("trainings"):
                 training_id = training.get("trainings")
-                userTrainingStat = UserTraining.objects.filter(training_id=training_id, user_id=self.user_id).values("completed")
+                userTrainingStat = UserTraining.objects.filter(training_id=training_id, user_id=self.user_id).distinct().values("completed")
                 #at least one training is not completed
                 if (not userTrainingStat[0].get("completed")):
                     return "Pending"
-            
+
             #all trainings are completed
             return "Pass"
 
@@ -73,7 +72,7 @@ class UserCertifications(models.Model):
     #returns user certification expiration date
     @property
     def expiration_date(self):
-        daysValid = Certification.objects.filter(id=self.certification_id_id).values("days_valid")
+        daysValid = Certification.objects.filter(id=self.certification_id_id).distinct().values("days_valid")
         days = daysValid[0].get("days_valid")
         return self.created_on_date + timedelta(days=days)
 

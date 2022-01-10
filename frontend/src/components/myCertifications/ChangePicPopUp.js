@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeProfilePic } from '../../services/redux/userSlice';
 import { ProfilesActions } from "../../services/api/profilesActions";
@@ -8,15 +8,29 @@ import Modal from 'react-bootstrap/Modal';
 
 function ChangePicPopUp(props) {
     const dispatch = useDispatch();
-    //const image = useSelector((state) => state.user.value.image);
     const id = useSelector((state) => state.user.value.id);
     const [newImage, setNewImage] = useState("");
+    let [file, setFile] = useState("");
 
-    //choose pic, submit -> post to database, change state
-    function saveImg() {
-        dispatch(changeProfilePic(newImage));
-        //user = new ProfilesActions();
-        //user.updateIdWithData(id, newImage)
+    function fetchImg(event){
+        setNewImage(event.target.value)
+        setFile(event.target.files[0]);
+    }
+
+    //save new image to Db and change state in redux to display new pic on page
+    async function saveImg() {
+        let fd = new FormData();
+        fd. append('image', file)
+
+        //upload image
+        let user = new ProfilesActions();
+        user.updateIdWithData(id, fd)
+        
+        // upload path of new image to state
+        await user.getId(id).then(res => {
+            dispatch(changeProfilePic(res.image));
+        })
+        
         props.onHide();
     }
 
@@ -37,12 +51,12 @@ function ChangePicPopUp(props) {
                 <Form.Control 
                 type="file" 
                 value = {newImage}
-                onChange= { (event) => setNewImage(event.target.value) }
+                onChange= { (event) => fetchImg(event) }
                 />
             </Form.Group>
             <Modal.Footer>
                 <Button onClick={props.onHide}>Cancel</Button>
-                <Button onClick={saveImg}>Save</Button>
+                <Button onClick={()=> saveImg()}>Save</Button>
             </Modal.Footer>
         </Modal.Body>
         </Modal>

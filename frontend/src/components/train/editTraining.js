@@ -5,6 +5,7 @@ import Row from "react-bootstrap/esm/Row";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { TrainingModulesActions } from "../../services/api/trainingModulesActions";
 
 function EditTraining({data}) {
 
@@ -15,14 +16,17 @@ function EditTraining({data}) {
 
     function edit(){
         //change file in db
-
-        setShowEdit(false)
+        let training = new TrainingModulesActions();
+        training.updateIdWithData(training_id, {link: newFile});
+        setShowEdit(false);
     }
 
     function deleteTraining(){
         //delete record from db
-
-        setShowDelete(false)
+        let training = new TrainingModulesActions();
+        training.DeleteId(training_id);
+        
+        setShowDelete(false);
     }
 
     return(
@@ -42,10 +46,10 @@ function EditTraining({data}) {
             <Modal.Title>Edit Training</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <Form.Group controlId="formFile" className="mb-3">
-                <Form.Label>Choose a file to replace current training</Form.Label>
+            <Form.Group controlId="formLink" className="mb-3">
+                <Form.Label>Add a link to file to replace current training</Form.Label>
                 <Form.Control 
-                type="file" 
+                type="text" 
                 value = {newFile}
                 onChange= { (event) => setNewFile(event.target.value) }
                 />

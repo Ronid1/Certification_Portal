@@ -62,25 +62,24 @@ export class Api {
         }
     }
     
+    //creates a new line in table
     createData(data) {
-        validateHook();
+        //validateHook();
         return client.post(this.endpoint, data);
     }
     
-    updateIdWithData(id, data) {
-        validateHook();
-        return client.put(this.endpoint+ '/' +id, data);
+    //update current line with specific data
+    async updateIdWithData(id, data) {
+        //validateHook();
+        return await client.patch(this.endpoint+ '/' +id + '/', data);
     }
     
+    //delete a line in table
     DeleteId(id) {
         return client.delete(this.endpoint+ '/' +id);
     }
-    
-    // deleteAll() {
-    //     return client.delete(this.endpoint);
-    // }
-    
-    
+     
+    // get data for specific id or full table in readable format
     async printableData(id) {
         let data;
         if (id == undefined)
@@ -102,6 +101,6 @@ export class Api {
 // *************** Hooks ***************
 
     validateHook(){};
-    async printableDataHook(dataArray, size, byid){}
+    async printableDataHook(){}
 
 }

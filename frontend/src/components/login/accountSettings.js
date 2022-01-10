@@ -4,19 +4,31 @@ import { UserActions } from "../../services/api/userActions"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Alert from 'react-bootstrap/Alert';
 
 function AccountSetting(props) {
     const id = useSelector((state) => state.user.value.id);
     const [newPassword, setNewPassword] = useState("");
     const [oldPassword, setOldPassword] = useState("");
+    const [wrongPassword, setWrongPassword] = useState(false);
 
-    function save() {
-        console.log(id)
+    //if valid, save new password to db
+    async function save() {
         const user = new UserActions();
-        let success = user.changePassword(id, oldPassword, newPassword);
-        
+        //try changing password in Db
+        let success = await user.changePassword(id, oldPassword, newPassword).then(res => {
+            return res
+        })
+
         setNewPassword("");
         setOldPassword("");
+
+        //if old password dosen't match to users current password - show error
+        if(!success){
+            setWrongPassword(true)
+            return;
+        }
+
         props.onHide();
     }
 
@@ -33,7 +45,14 @@ function AccountSetting(props) {
         </Modal.Header>
         <Modal.Body>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Alert variant="danger" show={wrongPassword} onClose={() => setWrongPassword(false)} dismissible>
+        <Alert.Heading></Alert.Heading>
+        <p>
+        Old password dosen't match to current password. Please try again.
+        </p>
+      </Alert>
+
+        <Form.Group className="mb-3" id="old-password" controlId="formBasicPassword">
             <Form.Label>Old Password</Form.Label>
         <Form.Control 
             type="password" 
@@ -42,7 +61,7 @@ function AccountSetting(props) {
             onChange= { (event) => setOldPassword(event.target.value) } />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Group className="mb-3"  id="new-password" controlId="formBasicPassword">
             <Form.Label>New Password</Form.Label>
         <Form.Control 
             type="password" 

@@ -43,11 +43,6 @@ export class TrainingModulesActions extends Api{
                 cert_name = res.data[0].name;
             })
 
-            // for (let j = 0; j < certs.length; j++){
-            //     if (certs[j].id == cert_id)
-            //         cert_name = certs[j].name
-            // }
-
             printableData.push({
                 id: data.id,
                 name: data.name,
@@ -58,28 +53,4 @@ export class TrainingModulesActions extends Api{
         
         return printableData;
         }
-        
-    //     for (let i = 0; i < size; i++)
-    //     {
-    //         cert_id = dataArray[i].certification_id
-            
-    //         //find cert name for cert_id
-    //         await certsList.getId(cert_id).then(res => {
-    //             cert_name = res.data[0].name;
-    //         })
-
-    //         // for (let j = 0; j < certs.length; j++){
-    //         //     if (certs[j].id == cert_id)
-    //         //         cert_name = certs[j].name
-    //         // }
-
-    //         printableData[i] = ({
-    //             id: printableData[i].id,
-    //             name: printableData[i].name,
-    //             certification_id: cert_id,
-    //             certification_name: cert_name})
-    //     }
-        
-    //     return printableData;
-    // }
 }

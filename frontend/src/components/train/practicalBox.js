@@ -35,14 +35,15 @@ function PracticalBox ({data}) {
     function addToUserLevelList(){
         let data;
         let temp = [];
-
+        let i = 0;
         for (let user of usersList){
             data={
+                user_certification_id: user. user_certification_id,
                 user_name: user.user_name, 
                 id: certification, 
                 level: user.level}
             
-            temp.push(<UserLevel key={user.level} data={data} />)
+            temp.push(<UserLevel key={i++} data={data} />)
         }
         setUserLevelList(temp);
     }
@@ -57,6 +58,7 @@ function PracticalBox ({data}) {
         await userCerts.findByCertificationId(certification).then(res => {
             for (let element of res){
                 usersLevelsList.push({
+                    user_certification_id: element.id,
                     user_id: element.user_id,
                     level: element.level
                 })
@@ -68,6 +70,7 @@ function PracticalBox ({data}) {
         for (let user of usersLevelsList){
             await profile.getId(user.user_id).then(res =>{
                 usersWithCertification.push({
+                    user_certification_id: user.user_certification_id,
                     user_id: user.user_id,
                     level: user.level,
                     user_name: res.user_name

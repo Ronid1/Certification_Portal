@@ -5,6 +5,7 @@ import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { UserCertificationsActions } from "../../services/api/userCertificationsActions";
 
 function UserLevel({data}) {
     const cert_id = data.id
@@ -17,6 +18,7 @@ function UserLevel({data}) {
         setfirstRender(false);
         getLevels();
     }
+
     useEffect(() => {
             addLevelstoList();
     }, [levels, firstRender, currentLevel])
@@ -29,10 +31,11 @@ function UserLevel({data}) {
     }
 
     function addLevelstoList(){
+        let i = 0;
         for (let level of levels){
             levelDropDown.push(
                 <Dropdown.Item 
-                    key={level.level} 
+                    key={i++} 
                     onClick={()=>changeLevel(level.level)}>
                         {level.level}
                 </Dropdown.Item>)     
@@ -40,8 +43,8 @@ function UserLevel({data}) {
     }
 
     function changeLevel(name){
-        //TO DO - change level in database
-
+        let userCert = new UserCertificationsActions();
+        userCert.updateIdWithData(data.user_certification_id, {entered_level: name})
         setCurrentLevel(name);
     }
 
