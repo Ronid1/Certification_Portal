@@ -4,6 +4,7 @@ import getCertsData from "../services/redux/getCertsData";
 import getTrainingsData from "../services/redux/getTrainingsData";
 import Navigation from '../components/Navigation';
 import CertificationBox from "../components/getCertified/CertificationBox";
+import Alert from 'react-bootstrap/Alert';
 
 function GetCertified() {
 
@@ -19,6 +20,11 @@ function GetCertified() {
 
   function addToList() {
     let certList = []; let data;
+
+    //if user dosn't have any certifications to go through
+    if (!certifications[0]){
+      return <Alert key="1" variant="danger">you don't have any certifications</Alert>;
+    }
     //check if certifications is theoretical
     for (let cert of certifications){
         if (!cert.practical) {
@@ -26,8 +32,11 @@ function GetCertified() {
             certList.push(<CertificationBox key={cert.id} data={data}/>)
         }
     }
-
-    return certList;
+    //if mo theoretical certs
+    if (!certList[0])
+      certList.push (<Alert key="2" variant="danger">you don't have any certifications</Alert>);
+    
+      return certList;
 }
 
   return (

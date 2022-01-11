@@ -5,6 +5,7 @@ import getInstructorData from "../services/redux/getInstructorData"
 import Navigation from '../components/Navigation';
 import PracticalBox from "../components/train/practicalBox";
 import TheoreticalBox from "../components/train/theoreticalBox";
+import Alert from 'react-bootstrap/Alert'
 
 function Train () {
   let instructor_for = useSelector((state) => state.user.value.instructorFor);
@@ -42,7 +43,7 @@ function Train () {
 
   function showTrainings(){
     if (!certificationList[0]){
-      return setElementList(<p>you are not an instructor</p>);
+      return setElementList(<Alert variant="danger">you are not an instructor</Alert>);
     }
 
     let temp = [];

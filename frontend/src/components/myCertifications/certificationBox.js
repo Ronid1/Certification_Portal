@@ -1,7 +1,6 @@
 import React from "react";
 import Card from 'react-bootstrap/Card'
 
-//https://react-bootstrap.github.io/components/accordion/
 function CertificationBox({data}) {
     return(
         <Card style={{ width: '18rem' }}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { UserTrainingsActions } from "../api/userTrainingsActions"
@@ -11,15 +11,17 @@ function getTrainingsData(){
   const idsList = [];
   const [trainingList, setTrainingList] = useState([]);
   const [fetching, setFetching] = useState(true);
- 
+
   if (fetching){
     setFetching(false);
     getData();
   }
 
   //add to state
-  dispatch(getTrainings(trainingList));
-  return trainingList;
+  useEffect(() => {
+    dispatch(getTrainings(trainingList));
+    return trainingList;
+  }, [trainingList])
 
   async function getData(){
     let userTrainings = new UserTrainingsActions();

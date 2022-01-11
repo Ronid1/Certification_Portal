@@ -24,11 +24,14 @@ function AllCertifications(){
     function addToList() {
       let data;
       let certList = [];
-
+      //user doesn't have any certifications
+      if (!certifications[0]){
+        return(<p>No certifications found</p>)
+      }
       //add certification component to list
       for (let cert of certifications) {
-        //if a cert is practical and pending or fail status - dont include it
-        if (cert.practical && cert.level!='Pass'){
+        //if a cert is theoretical and pending or fail status - dont include it
+        if (!cert.practical && cert.level!='Pass'){
           continue;
         }
 

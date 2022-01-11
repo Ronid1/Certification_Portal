@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { connectAdvanced, useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { UserCertificationsActions } from "../api/userCertificationsActions"
 import { getCertifications } from "../redux/certificationsSlice";
@@ -17,8 +17,10 @@ function getCertsData(){
   }
 
   //add to state
-  dispatch(getCertifications(certsList));
-  return certsList;
+  useEffect(() => {
+    dispatch(getCertifications(certsList));
+    return certsList;
+  }, [certsList])
 
   async function getData(){
     let userCerts = new UserCertificationsActions();
