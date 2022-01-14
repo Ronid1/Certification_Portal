@@ -63,9 +63,10 @@ export class Api {
     }
     
     //creates a new line in table
-    createData(data) {
+    async createData(data) {
+        console.log(data)
         //validateHook();
-        return client.post(this.endpoint, data);
+        return await client.post(this.endpoint + '/', data);
     }
     
     //update current line with specific data

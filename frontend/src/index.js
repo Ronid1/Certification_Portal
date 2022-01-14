@@ -3,6 +3,7 @@ import React from 'react';
 import App from "./components/App";
 import '../static/css/index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-datepicker/dist/react-datepicker.css";
 import { Provider } from "react-redux";
 import store from './services/redux/store';
 import { PersistGate } from "redux-persist/integration/react"

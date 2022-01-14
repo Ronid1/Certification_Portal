@@ -70,8 +70,8 @@ function AccountSetting(props) {
             onChange= { (event) => setNewPassword(event.target.value) } />
         </Form.Group>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Cancel</Button>
-                <Button onClick={save}>Save</Button>
+                <Button id="btn-primary" onClick={props.onHide}>Cancel</Button>
+                <Button id="btn-primary" onClick={save}>Save</Button>
             </Modal.Footer>
         </Modal.Body>
         </Modal>

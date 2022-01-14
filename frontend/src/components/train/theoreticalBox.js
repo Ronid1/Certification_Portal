@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from "react";
 import { TrainingModulesActions } from "../../services/api/trainingModulesActions"
-import PracticalBox from "./practicalBox";
+import AddTraining from "./addTraining";
 import Accordion from 'react-bootstrap/Accordion';
 import EditTraining from "./editTraining";
+import Button from 'react-bootstrap/Button';
+
 
 function TheoreticalBox ({data}) {
     const certification = data.cert_id;
     let [firstRender, setFirstRender] = useState(true)
     let [trainingsList, setTrainingsList] = useState([]);
     let [componentList, setComponentList] = useState([]);
+    let [showAdd, setShowAdd] = useState(false);
 
     if (firstRender){
         setFirstRender(false)
@@ -47,17 +50,22 @@ function TheoreticalBox ({data}) {
         setComponentList(tempList)
     }
 
+
     return(
+        <>
+        <AddTraining show={showAdd} setShow={setShowAdd} certificationId={certification} />
         <Accordion>
             <Accordion.Item>
                 <Accordion.Header>
                     {data.name}
                 </Accordion.Header>
                 <Accordion.Body>
+                    <Button onClick={() => setShowAdd(true)}>Add training</Button>
                 { componentList }
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
+        </>
     );
 
 

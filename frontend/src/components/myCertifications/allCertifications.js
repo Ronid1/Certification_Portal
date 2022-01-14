@@ -39,12 +39,6 @@ function AllCertifications(){
         certList.push(<CertificationBox key={cert.id} data = {data} />)
       }
   
-      // TO DO:
-      // mark certifications by:
-      // about to expire
-      // expired
-      // level is certifeid
-
       return certList;
   }
 }

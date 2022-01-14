@@ -1,32 +1,25 @@
-import React, {useState} from 'react';
-import { UserCertificationsActions } from '../../services/api/userCertificationsActions';
-import Table from 'react-bootstrap/Table'
+import React, {useState, useEffect} from 'react';
+import Table from 'react-bootstrap/Table';
 
-function CertificationTable() {
-
-  let certifications = new UserCertificationsActions();
+function CertificationTable({data}) {
   let [table, setTable] = useState([]);
-  let [firstRender, setFirstRender] = useState(true);
 
-  if (firstRender){
-    setFirstRender(false);
-    getData();
-  }
+  useEffect(() => {
+    addToTable();
+  }, [data])
 
-  async function getData(){ 
+  function addToTable(){ 
     let temp = []; let i = 0;
-    await certifications.printableData().then(response => {
-    for (let data of response){
+    for (let line of data){
       temp.push(
         <tr key = {i++}>
-            <td>{data.user_name}</td>
-            <td>{data.certification_name}</td>
-            <td>{data.level}</td>
-            <td>{data.created_on_date}</td>
-            <td>{data.expiration_date}</td>
+            <td>{line.user_name}</td>
+            <td>{line.certification_name}</td>
+            <td>{line.level}</td>
+            <td>{line.created_on_date}</td>
+            <td>{line.expiration_date}</td>
         </tr>
       )}
-    })
     setTable(temp);
   }
 
