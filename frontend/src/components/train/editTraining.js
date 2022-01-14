@@ -35,8 +35,8 @@ function EditTraining({data}) {
             <Row>
                 <Col>{data.name}</Col>
                 <Col>
-                <Button onClick={() => setShowEdit(true)}>Edit</Button>
-                <Button onClick={() => setShowDelete(true)}>Delete</Button>
+                <Button id="btn-train" onClick={() => setShowEdit(true)}>Edit</Button>
+                <Button id="btn-train" onClick={() => setShowDelete(true)}>Delete</Button>
                 </Col>
             </Row>
         </Container>
@@ -59,7 +59,7 @@ function EditTraining({data}) {
             <Button variant="secondary" onClick={() => setShowEdit(false)}>
                 Close
             </Button>
-            <Button variant="primary" onClick={edit}>
+            <Button id="btn-primary" onClick={edit}>
                 Save
             </Button>
             </Modal.Footer>
@@ -75,7 +75,7 @@ function EditTraining({data}) {
             <Button variant="secondary" onClick={() => setShowDelete(false)}>
                 Cancel
             </Button>
-            <Button variant="primary" onClick={deleteTraining}>
+            <Button id="btn-primary" onClick={deleteTraining}>
                 Delete
             </Button>
             </Modal.Footer>

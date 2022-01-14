@@ -57,7 +57,7 @@ function AddTraining ({show, setShow, certificationId}) {
             <Button variant="secondary" onClick={() => setShow(false)}>
                 Cancel
             </Button>
-            <Button variant="primary" onClick={() => addNewTraining()}>
+            <Button id="btn-primary" onClick={() => addNewTraining()}>
                 Save
             </Button>
             </Modal.Footer>

@@ -54,13 +54,13 @@ function TheoreticalBox ({data}) {
     return(
         <>
         <AddTraining show={showAdd} setShow={setShowAdd} certificationId={certification} />
-        <Accordion>
+        <Accordion id="training-box" defaultActiveKey="0">
             <Accordion.Item>
                 <Accordion.Header>
                     {data.name}
                 </Accordion.Header>
                 <Accordion.Body>
-                    <Button onClick={() => setShowAdd(true)}>Add training</Button>
+                    <Button id="add-training-btn" variant="light" onClick={() => setShowAdd(true)}>+ Add training</Button>
                 { componentList }
                 </Accordion.Body>
             </Accordion.Item>

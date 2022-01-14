@@ -27,10 +27,26 @@ a:link{
     border-color: var(--zipline-red);
 }
 
+#btn-train {
+  background-color: var(--zipline-red);
+  border-color: var(--zipline-red);
+  text-decoration: underline;
+}
+
+#add-training-btn{
+  margin-bottom: 10px;
+}
+
+#dropdown-basic-button{
+  background-color: var(--zipline-red);
+  border-color: var(--zipline-red);
+}
+
 #training-bar {
   background-color: var(--zipline-red);
   border-color: var(--zipline-red);
   width: 100%;
+  margin-top: 5px;
 }
 
 #link-box{ 
@@ -44,6 +60,13 @@ a:link{
 #train{
   background-color: var(--zipline-red);
   border-color: var(--zipline-red);
+  margin-top: 5px;
+  color: white;
+  font-size: large;
+}
+
+#training-box{
+  margin-top: 30px;
 }
 
 #link{

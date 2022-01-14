@@ -55,8 +55,8 @@ function ChangePicPopUp(props) {
                 />
             </Form.Group>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Cancel</Button>
-                <Button onClick={()=> saveImg()}>Save</Button>
+                <Button id="btn-primary" onClick={props.onHide}>Cancel</Button>
+                <Button  id="btn-primary" onClick={()=> saveImg()}>Save</Button>
             </Modal.Footer>
         </Modal.Body>
         </Modal>

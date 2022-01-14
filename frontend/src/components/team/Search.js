@@ -105,7 +105,7 @@ function Search({data, setData}){
                 </Col><Col>
                     <DatePicker placeholderText="End Date" dateFormat='yyyy-MM-dd' selected={endDate} onChange={(date) => setEndDate(date)} />
                 </Col><Col>
-                <Button onClick={search}> Search </Button>
+                <Button id="btn-primary" onClick={search}> Search </Button>
                 </Col>
             </Row>
 

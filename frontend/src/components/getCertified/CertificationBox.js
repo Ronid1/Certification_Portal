@@ -40,7 +40,7 @@ function CertificationBox({data}) {
 
     
     return(
-        <Accordion>
+        <Accordion id="training-box" defaultActiveKey="0">
         <Accordion.Item>
             <Accordion.Header>
                 {data.name}

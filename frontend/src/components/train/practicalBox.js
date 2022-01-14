@@ -20,7 +20,7 @@ function PracticalBox ({data}) {
     }, [usersList, firstRender]);
 
     return(
-        <Accordion>
+        <Accordion id="training-box" defaultActiveKey="0">
             <Accordion.Item>
                 <Accordion.Header>
                     {data.name}
