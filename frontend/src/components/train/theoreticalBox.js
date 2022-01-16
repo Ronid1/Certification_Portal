@@ -60,7 +60,7 @@ function TheoreticalBox ({data}) {
                     {data.name}
                 </Accordion.Header>
                 <Accordion.Body>
-                    <Button id="add-training-btn" variant="light" onClick={() => setShowAdd(true)}>+ Add training</Button>
+                    <Button id="add--btn" variant="light" onClick={() => setShowAdd(true)}>+ Add training</Button>
                 { componentList }
                 </Accordion.Body>
             </Accordion.Item>

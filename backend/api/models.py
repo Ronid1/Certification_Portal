@@ -4,12 +4,13 @@ from django.db.models.deletion import CASCADE
 from datetime import date, timedelta
 from django.core.validators import validate_image_file_extension, URLValidator
 from django.db.models.fields import BooleanField
+import datetime
 
 class Profile(models.Model):
     user_id = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     user_name = models.CharField(max_length=80)
     is_admin = models.BooleanField(default=False)
-    role = models.CharField(max_length=80)
+    role = models.CharField(max_length=80, blank=True)
     image = models.ImageField(upload_to='static/', validators=[validate_image_file_extension], height_field=None, width_field=None, max_length=100, null=True, default = 'null')
 
 class CertificationScales(models.Model):
@@ -32,8 +33,8 @@ class Instructors(models.Model):
 class UserCertifications(models.Model):
     certification_id = models.ForeignKey(Certification, related_name='users', on_delete=models.CASCADE)
     user_id = models.ForeignKey(Profile, related_name='certifications', on_delete=models.CASCADE)
-    entered_level = models.ForeignKey(CertificationLevels, to_field='level', on_delete=models.CASCADE)
-    created_on_date = models.DateField(auto_now=True)
+    entered_level = models.ForeignKey(CertificationLevels, to_field='level', on_delete=models.CASCADE, default="Pending")
+    created_on_date = models.DateField(default=date.today()) #auto_now=True #datetime.datetime.now()
     #https://docs.djangoproject.com/en/4.0/topics/db/models/
 
     class Meta:

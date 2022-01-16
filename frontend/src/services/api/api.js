@@ -64,14 +64,12 @@ export class Api {
     
     //creates a new line in table
     async createData(data) {
-        console.log(data)
-        //validateHook();
+
         return await client.post(this.endpoint + '/', data);
     }
     
     //update current line with specific data
     async updateIdWithData(id, data) {
-        //validateHook();
         return await client.patch(this.endpoint+ '/' +id + '/', data);
     }
     

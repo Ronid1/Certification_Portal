@@ -1,4 +1,4 @@
-import { Api } from "./api";
+import { Api, client } from "./api";
 
 // https://daily.dev/blog/a-guide-to-writing-clean-api-calls-using-axios
 
@@ -11,6 +11,20 @@ export class ProfilesActions extends Api{
         super(ENDPOINT)
     }
     
+    //returns data with user_id = name
+    async findByUserName(name){
+        let dataArray;
+        try{
+            await client.get(this.endpoint+ '/?user_name=' +name).then(res => {
+                dataArray =  res.data;
+            });
+            return dataArray;
+        }
+        catch {
+            return null;
+        }
+    }
+
     //EDIT - not array option
     async printableDataHook(dataArray, size){
 
