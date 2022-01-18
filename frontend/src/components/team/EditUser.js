@@ -14,7 +14,7 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
     let [name, setName] = useState("");
-    let [admin, setAdmin] = useState(false);
+    let [isAdmin, setIsAdmin] = useState(false);
     let [role, setRole] = useState("");
     let [certifications, setCertifications] = useState([]);
     let [showError, setShowError] = useState(false)
@@ -22,15 +22,14 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
 
     useEffect(() => {
         getAllCerts();
-        //getAllValues();
     }, [data])
 
     useEffect(() => {
-        if(!show)
-            return;
+        // if(!show)
+        //     return;
 
         getAllValues();
-        console.log("admin: " + admin)
+        console.log("admin? " + isAdmin)
     }, [show, newUser])
    
     //get all certifications in Db to display
@@ -147,7 +146,7 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
         
         //get profile info
         await profile.getId(data.user_id).then(res => {
-            setAdmin(res.is_admin);
+            setIsAdmin(res.is_admin);
             setRole(res.role);
             myCertification = res.certifications;
         })
@@ -160,24 +159,23 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
         //get user certifications
         let tempCertList=[];
         for (let cert of myCertification){
-            userCerts.getId(cert).then(res => {
+            await userCerts.getId(cert).then(res => {
                 tempCertList.push(res.certification_id.toString())
             })
         }
-        setCertifications(tempCertList);        
+        setCertifications(tempCertList);      
     }
 
     function zeroAndClose(){
         setEmail("");
         setPassword("");
         setName("");
-        setAdmin(false);
+        setIsAdmin(false);
         setRole("");
         setCertifications([]);
         setNewUser(true);
         setShow(false);
     }
-
 
     return(
         <Modal show={show}>
@@ -236,7 +234,7 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
         </Form.Group>
 
 
-{/* https://github.com/kfrancikowski/react-multiselect-dropdown-bootstrap#readme */}
+{/* https://github.com/kfrancikowski/react-multiselect-dropdown-bootstrap#readme  */}
     Certifications:
     <DropdownMultiselect 
         options={allCertifications} 
@@ -248,9 +246,9 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
     <Form.Check 
             type="checkbox" 
             label="Admin" 
-            defaultChecked = {admin}
-            value = {admin} 
-            onChange= { (event) => setAdmin(event.target.value) }
+            defaultChecked = {isAdmin}
+            value = {isAdmin} 
+            onChange= { (event) => setIsAdmin(event.target.value) }
         />
 
         </Modal.Body>

@@ -20,6 +20,8 @@ class CertificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certification
         fields = ["id", "name", "practical", "level_scale", "days_valid", "trainings"]
+        extra_kwargs = {'trainings' : {'required' : False}}
+
 
 class LevelsSerializer(serializers.ModelSerializer):
     class Meta:

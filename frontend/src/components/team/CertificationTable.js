@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 
-function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setUser, setCertification, setNewUser}) {
+function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setUser, setCertification, setNewUser, setNewCert}) {
   let [table, setTable] = useState([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setU
               </td>
               <td>
                 {line.certification_name}
-                <Button variant="outline-light" size="sm" onClick={() => setShowEditCert(true)}>edit</Button>
+                <Button variant="outline-light" size="sm" onClick={() => { setCertification(line), setNewCert(false), setShowEditCert(true)}}>edit</Button>
               </td>
               <td>{line.level}</td>
               <td>{line.created_on_date}</td>
