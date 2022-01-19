@@ -1,24 +1,38 @@
 import React, {useState, useEffect} from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import { UserCertificationsActions } from '../../services/api/userCertificationsActions';
 
-function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setUser, setCertification, setNewUser, setNewCert}) {
+function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setUser, setCertification, setNewUser, setNewCert, setUserCerts}) {
   let [table, setTable] = useState([]);
 
   useEffect(() => {
     addToTable();
   }, [data])
 
-  function addToTable(){ 
+  async function getUserCerts(id){
+    let list = [];
+      let userCertifications = new UserCertificationsActions();
+      userCertifications.findByUserId(id).then(res => {
+        for (let data of res)
+          list.push(data.certification_id.toString())
+        })
+
+        return list;
+  }
+
+  async function addToTable(){ 
     let temp = []; let i = 0;
     for (let line of data){
       //if user is admin, add editing option
       if (admin){
+        let myCerts = await getUserCerts(line.user_id).then(res => { return res});
+
         temp.push(
           <tr key = {i++}>
               <td>
                 {line.user_name}
-                <Button variant="outline-light" size="sm" onClick={() => { setUser(line), setNewUser(false), setShowEditUser(true)}}>edit</Button>
+                <Button variant="outline-light" size="sm" onClick={() => { setUser(line), setUserCerts(myCerts), setNewUser(false), setShowEditUser(true)}}>edit</Button>
               </td>
               <td>
                 {line.certification_name}

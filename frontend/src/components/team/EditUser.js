@@ -9,7 +9,7 @@ import { CertificationsActions } from '../../services/api/certificationsActions'
 import { ProfilesActions } from '../../services/api/profilesActions';
 import { UserCertificationsActions } from '../../services/api/userCertificationsActions';
 
-function EditUser({show, setShow, newUser, setNewUser, data}){
+function EditUser({show, setShow, newUser, setNewUser, data, userCertifications}){
 
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
@@ -19,18 +19,25 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
     let [certifications, setCertifications] = useState([]);
     let [showError, setShowError] = useState(false)
     let [allCertifications, setAllCertifications] = useState([]);
+    let [deleteButton, setDeleteButton] = useState([]);
+
 
     useEffect(() => {
+        console.log("admin");
         getAllCerts();
-    }, [data])
-
-    useEffect(() => {
-        // if(!show)
-        //     return;
-
         getAllValues();
-        console.log("admin? " + isAdmin)
-    }, [show, newUser])
+        getDelete();
+    }, [data, newUser])
+
+    function getDelete(){
+        if (!newUser){
+        setDeleteButton(
+            <Button id="btn-primary" onClick={() => deleteUser()}> 
+                Delete this User
+            </Button>)
+
+        }
+    }
    
     //get all certifications in Db to display
     async function getAllCerts(){
@@ -45,21 +52,17 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
     }
 
     function save(){
-        if (name == "" || email == "" || password == "" || certifications.length == 0){
+        if (newUser & (name == "" || email == "" || password == "" || certifications.length == 0)
+        || !newUser & (name == "" || certifications.length == 0))
+        {
             setShowError(true);
             return;
         }
         
         let profileInfo = {
             user_name: name,
-            is_admin: admin,
+            is_admin: isAdmin,
             role: role,
-        }
-
-        let userInfo = {
-            email: email,
-            username: email,
-            password: password,
         }
 
         let user = new UserActions();
@@ -68,10 +71,10 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
 
         //if new user- create user, then update profile with same id
         if (newUser)
-            createUser(user, profile, userCerts, userInfo, profileInfo);
+            createUser(user, profile, userCerts, profileInfo);
 
         else
-            editUser(user, profile, userCerts, userInfo, profileInfo)
+            editUser(user, profile, userCerts, profileInfo)
 
         //zero all input and close
         zeroAndClose();
@@ -79,7 +82,13 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
     }
 
     //create a new user, profile and user certifications
-    async function createUser(user, profile, userCerts, userInfo, profileInfo){
+    async function createUser(user, profile, userCerts, profileInfo){
+        let userInfo = {
+            email: email,
+            username: email,
+            password: password,
+        }
+
         let id;
         //create user
         await user.createData(userInfo).then(res => {
@@ -93,46 +102,64 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
         //create user-certifications
         if (certifications.length > 0){
             for (let cert of certifications){
-                await userCerts.createData({certification_id: cert, user_id:id});
+                await userCerts.createData({certification_id: parseInt(cert), user_id:id});
             }
         }
     }
 
     //edit users info, profile and certifications
-    async function editUser(user,profile,userCerts, userInfo, profileInfo){
+    async function editUser(user,profile,userCerts, profileInfo){
         let id = data. user_id;
 
-        await user.updateIdWithData(id, userInfo);
-        await profile.updateIdWithData(id, profileInfo);
+        //changed password
+        if (password != "")
+            await user.updateIdWithData(id, {password: password}).then(res => (console.log(res)))
+
+        await profile.updateIdWithData(id, profileInfo).then(res => (console.log(res)));
 
         //compare users current certifications to ones selected and add/remove as needed
         await userCerts.findByUserId(id).then(res => {
+
             //delete certifications
             for (let currentCert of res){
+                let found = false;
+
                 for (let selecetedCert of certifications){
                     //current certification was also selected
-                    if (currentCert.certification_id == selecetedCert)
-                        continue;
+                    if (currentCert.certification_id == parseInt(selecetedCert)){
+                        found = true;
+                        break;
+                    }
                 }
-                // !!!!!! is this buggy and i'll get here no matter what?
                 //current certification was no selected -> delete
-                userCerts.DeleteId(currentCert.id)
+                if (!found)
+                    userCerts.DeleteId(currentCert.id)
 
             }
 
             //add new selected certifications
             for (let selecetedCert of certifications){
+
+                let found = false;
+
                 for (let currentCert of res){
                     //selected certification already exists
-                    if (currentCert.certification_id == selecetedCert)
-                        continue;
+                    if (currentCert.certification_id == parseInt(selecetedCert)){
+                        found = true;
+                        break;
+                    }
                 }
-                // !!!!!! is this buggy and i'll get here no matter what?
-
                 //create new user certification
-                userCerts.createData({certification_id: selecetedCert, user_id:id})
+                if (!found)
+                    userCerts.createData({certification_id: parseInt(selecetedCert), user_id:id}).then(res => { console.log(res)})
             }
         })
+    }
+
+    function deleteUser(){
+        let user = new UserActions();
+        user.DeleteId(data.user_id);
+        zeroAndClose();
     }
 
     async function getAllValues(){
@@ -153,17 +180,8 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
 
         //input user info
         setEmail("Can't Edit Email");
-        setPassword("*******");
         setName(data.user_name);
-
-        //get user certifications
-        let tempCertList=[];
-        for (let cert of myCertification){
-            await userCerts.getId(cert).then(res => {
-                tempCertList.push(res.certification_id.toString())
-            })
-        }
-        setCertifications(tempCertList);      
+        setCertifications(userCertifications);    
     }
 
     function zeroAndClose(){
@@ -188,6 +206,7 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
         <p> Name, Email, Password and Certifications must have a value </p>
         </Alert>
        
+        {deleteButton}
 
         <Form.Group controlId="formLink" className="mb-3">
             <Form.Label>Name:</Form.Label>
@@ -228,7 +247,7 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
             <Form.Control 
             type="text"
             placeholder = "Passwrod"
-            value = {password}
+            value = {newUser? password : "**********"}
             onChange= { (event) => setPassword(event.target.value) }
             />
         </Form.Group>
@@ -239,16 +258,15 @@ function EditUser({show, setShow, newUser, setNewUser, data}){
     <DropdownMultiselect 
         options={allCertifications} 
         name="certification" 
-        selected={certifications}
+        selected={newUser ? [] : userCertifications}
         handleOnChange= {(selected) => setCertifications(selected)}
     />
 
     <Form.Check 
             type="checkbox" 
-            label="Admin" 
-            defaultChecked = {isAdmin}
-            value = {isAdmin} 
-            onChange= { (event) => setIsAdmin(event.target.value) }
+            label="Admin"
+            checked = {isAdmin}
+            onChange= { (event) => setIsAdmin(event.target.checked) }
         />
 
         </Modal.Body>
