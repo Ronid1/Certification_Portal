@@ -17,7 +17,7 @@ function Certifications() {
             <UserInfo />
           </Col>
           <Col>
-            <h1>Certifications</h1>
+            <h1>My Certifications</h1>
             <AllCertifications />
           </Col>
           </Row>

@@ -60,7 +60,7 @@ function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setU
 
 
   return(
-    <Table striped bordered hover>
+    <Table id="team-table" striped bordered hover>
       <thead>
         <tr>
           <th>name</th>

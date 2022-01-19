@@ -42,7 +42,7 @@ function GetCertified() {
   return (
     <div>
       <Navigation />
-      <h1>Get Certified Page</h1>
+      <h1>Get Certified</h1>
       {theoreticalCert}
     </div>
   )

@@ -60,7 +60,7 @@ function Train () {
   return(
       <div>
         <Navigation />
-        <h1>Train Page</h1>
+        <h1>Train</h1>
         { elementList }
       </div>
     );

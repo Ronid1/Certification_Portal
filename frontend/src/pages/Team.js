@@ -39,8 +39,8 @@ function Team(){
   function adminPermissions(){
     if (admin){
       setAdminActions([ 
-        <Button key="user" variant="light" onClick={() => {setNewUser(true), setShowEditUser(true)}}>+ Add User</Button>,
-        <Button key="cert" variant="light" onClick={() => {setShowEditCert(true), setNewCert(true)}}>+ Add Certification</Button>
+        <Button id="admin-btn" key="user" variant="light" onClick={() => {setNewUser(true), setShowEditUser(true)}}>+ Add User</Button>,
+        <Button id="admin-btn" key="cert" variant="light" onClick={() => {setShowEditCert(true), setNewCert(true)}}>+ Add Certification</Button>
       ])
     }
   }
@@ -49,9 +49,10 @@ function Team(){
     <div>
       <Navigation />
       <EditUser show={showEditUser} setShow={setShowEditUser} newUser={newUser} setNewUser={setNewUser} data={user} userCertifications={userCerts}/>
-      <h1>Team Page</h1>
+      <h1>My Team</h1>
       <EditCerttification show={showEditCert} setShow={setShowEditCert} newCert={newCert} data={certification}/>
       {adminActions}
+
       <Search data={data} setData={setData} />
       <CertificationTable data={data} admin={admin} 
         setShowEditCert={setShowEditCert} setShowEditUser={setShowEditUser}

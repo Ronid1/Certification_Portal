@@ -37,9 +37,21 @@ a:link{
   margin-bottom: 10px;
 }
 
+#admin-btn{
+  margin: 10px;
+}
+
 #dropdown-basic-button{
   background-color: var(--zipline-red);
   border-color: var(--zipline-red);
+}
+
+#team-search{
+  margin: 10px;
+}
+
+#team-table{
+  margin: 20px;
 }
 
 #training-bar {

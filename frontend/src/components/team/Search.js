@@ -18,6 +18,7 @@ function Search({data, setData}){
 
     //remove irrelevent data from table
     function search(){
+        console.log("seraching...")
         let dataCopy = [...data];
         let size = dataCopy.length;
 
@@ -43,8 +44,8 @@ function Search({data, setData}){
 
             if (startDate != ""){
                 if ((dataCopy[i].created_on_date.substring(0,4) <= startDate.getFullYear()) &&
-                    (dataCopy[i].created_on_date.substring(6,7) <= startDate.getMonth()+1) && 
-                    (dataCopy[i].created_on_date.substring(9,10) <= startDate.getDate())){
+                    (dataCopy[i].created_on_date.substring(5,7) <= startDate.getMonth()+1) && 
+                    (dataCopy[i].created_on_date.substring(8,10) <= startDate.getDate())){
                         dataCopy.splice(i,1);
                         setData(dataCopy);
                         continue;
@@ -54,8 +55,8 @@ function Search({data, setData}){
 
             if (endDate != ""){
                 if ((dataCopy[i].created_on_date.substring(0,4) >= endDate.getFullYear()) &&
-                    (dataCopy[i].created_on_date.substring(6,7) >= endDate.getMonth()+1) && 
-                    (dataCopy[i].created_on_date.substring(9,10) >= endDate.getDate())){
+                    (dataCopy[i].created_on_date.substring(5,7) >= endDate.getMonth()+1) && 
+                    (dataCopy[i].created_on_date.substring(8,10) >= endDate.getDate())){
                         dataCopy.splice(i,1);
                         setData(dataCopy);
                         continue;
@@ -66,7 +67,7 @@ function Search({data, setData}){
     }
 
     return(
-        <Container>
+        <Container  id="team-search">
             <Row>
                 <Col>
                 <Form.Group className="mb-3" id="name">
