@@ -2,8 +2,9 @@ import React, {useState, useEffect} from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { UserCertificationsActions } from '../../services/api/userCertificationsActions';
+import { InstructorsActions } from '../../services/api/instructorsActions';
 
-function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setUser, setCertification, setNewUser, setNewCert, setUserCerts}) {
+function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setUser, setCertification, setNewUser, setNewCert, setUserCerts, setTrainers}) {
   let [table, setTable] = useState([]);
 
   useEffect(() => {
@@ -21,12 +22,24 @@ function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setU
         return list;
   }
 
+  async function getInstructors(id){
+    let list = [];
+    let instructors = new InstructorsActions();
+    instructors.findByCertId(id).then(res => {
+      for (let data of res)
+        list.push(data.user_id.toString())
+      })
+
+      return list;
+  }
+
   async function addToTable(){ 
     let temp = []; let i = 0;
     for (let line of data){
       //if user is admin, add editing option
       if (admin){
         let myCerts = await getUserCerts(line.user_id).then(res => { return res});
+        let instructors = await getInstructors(line.certification_id).then(res => {return res});
 
         temp.push(
           <tr key = {i++}>
@@ -36,7 +49,7 @@ function CertificationTable({data, admin, setShowEditCert, setShowEditUser, setU
               </td>
               <td>
                 {line.certification_name}
-                <Button variant="outline-light" size="sm" onClick={() => { setCertification(line), setNewCert(false), setShowEditCert(true)}}>edit</Button>
+                <Button variant="outline-light" size="sm" onClick={() => { setCertification(line), setTrainers(instructors), setNewCert(false), setShowEditCert(true)}}>edit</Button>
               </td>
               <td>{line.level}</td>
               <td>{line.created_on_date}</td>

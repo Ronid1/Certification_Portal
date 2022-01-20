@@ -1,5 +1,5 @@
 //import certificationsSlice from "../redux/certificationsSlice";
-import { Api } from "./api";
+import { Api, client } from "./api";
 import { ProfilesActions } from "./profilesActions";
 import { CertificationsActions } from "./certificationsActions";
 
@@ -14,7 +14,20 @@ export class InstructorsActions extends Api{
         super(ENDPOINT)
     }
 
-    //EDIT - not array option
+    async findByCertId(id){
+        let dataArray;
+        try{
+            await client.get(this.endpoint+ '/?certification_id=' +id).then(res => {
+                dataArray =  res.data;
+            });
+            return dataArray;
+        }
+        catch {
+            return null;
+        }
+
+    }
+
     async printableDataHook(dataArray, size){
         let profilesList = new ProfilesActions();
         let certsList = new CertificationsActions();
@@ -44,29 +57,6 @@ export class InstructorsActions extends Api{
                 certification_id: cert_id,
                 certification_name: cert_name})
         }
-
-        // for (let i = 0; i < size; i++)
-        // {
-
-        //     id = dataArray[i].user_id
-        //     cert_id = dataArray[i].certification_id
-            
-        //     //find name for user_id
-        //     await profilesList.findByUserId(id).then(res => {
-        //         name = res.data[0].user_name
-        //     })
-
-        //     //find cert name for cert_id
-        //     await certsList.getId(cert_id).then(res => {
-        //         cert_name = res.data[0].name;
-        //     })
-
-        //     printableData[i]=({
-        //         user_id: id,
-        //         user_name: name,
-        //         certification_id: cert_id,
-        //         certification_name: cert_name})
-        // }
 
         return printableData;
     }

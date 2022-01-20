@@ -5,23 +5,28 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import { ScaleActions } from '../../services/api/scalesActions';
 import { CertificationsActions } from '../../services/api/certificationsActions';
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { ProfilesActions } from '../../services/api/profilesActions';
+import { InstructorsActions } from '../../services/api/instructorsActions';
 
-function EditCerttification({show, setShow, newCert, data}){
+function EditCerttification({show, setShow, newCert, trainers, data}){
 
     let [name, setName] = useState("");
     let [practical, setPractical] = useState(true);
     let [scale, setScale] = useState("");
     let [duration, setDuration] = useState("");
+    let [certTrainers, setCertTrainers] = useState([]);
     let [showError, setShowError] = useState(false);
     let [scaleOptions, setScaleOptions] = useState();
     let [firstScale, setFirstScale] = useState({name: "", data:""});
+    let [allUsers, setAllUsers] = useState([]);
     let [deleteButton, setDeleteButton] = useState([]);
 
     useEffect(() => {
-        console.log("testing")
         getCertData();
         getDelete();
-    }, [data, show])
+        getAllUsers();
+    }, [data, newCert])
 
     
     useEffect(() => {
@@ -36,6 +41,18 @@ function EditCerttification({show, setShow, newCert, data}){
             </Button>)
 
         }
+    }
+
+    //get all users in Db to display as potential trainers
+    async function getAllUsers(){
+        let users = new ProfilesActions();
+        let temp = [];
+        await users.getAll().then(res => {
+            for (let item of res){
+                temp.push({key:item.user_id, label:item.user_name})
+            }
+        })
+        setAllUsers(temp);
     }
 
     async function getScaleOptions(){
@@ -65,6 +82,7 @@ function EditCerttification({show, setShow, newCert, data}){
 
         setName(data.certification_name);
         setPractical(data.practical);
+        setCertTrainers(trainers)
 
         let certId = data.certification_id;
         let certs = new CertificationsActions();
@@ -82,21 +100,69 @@ function EditCerttification({show, setShow, newCert, data}){
 
     }
 
-    function save(){
+    async function save(){
         if (name == "" || scale.length == 0)
             setShowError(true);
 
         let cert = new CertificationsActions();
+        let instructor = new InstructorsActions();
 
         let info = {name:name, practical:practical, level_scale:scale, days_valid:duration};
-        console.log("sending info: ");
-        console.log(info);
 
-        if (newCert)
-            cert.createData(info)
+        if (newCert){
+            let certId = await cert.createData(info).then(res => {
+                console.log(res);
+                return res.data.id;
+            })
 
-        else
-            cert.updateIdWithData(data.certification_id, info)
+            //create trainers for this certification
+            for (let user of certTrainers){
+                instructor.createData({user_id: parseInt(user), certification_id:certId})
+            }
+        }
+
+        else{
+            //edit certification data
+            cert.updateIdWithData(data.certification_id, info);
+
+            //compare certifications current instructors to ones selected and add/remove as needed
+            await instructor.findByCertId(data.certification_id).then(res => {
+
+            //delete instructor
+            for (let currentInstractor of res){
+                let found = false;
+
+                for (let selecetedInstructor of certTrainers){
+                    //current instrucot was also selected
+                    if (currentInstractor.user_id == parseInt(selecetedInstructor)){
+                        found = true;
+                        break;
+                    }
+                }
+                //current instructor was no selected -> delete
+                if (!found)
+                    instructor.DeleteId(currentInstractor.id)
+
+            }
+
+            //add new selected instroctors
+            for (let selecetedInstructor of certTrainers){
+
+                let found = false;
+
+                for (let currentInstractor of res){
+                    //selected instructor already exists
+                    if (currentInstractor.user_id == parseInt(selecetedInstructor)){
+                        found = true;
+                        break;
+                    }
+                }
+                //create new instructor
+                if (!found)
+                    instructor.createData({user_id: parseInt(selecetedInstructor), certification_id:data.certification_id})
+            }
+        })
+        }
 
         zeroAndClose();
     }
@@ -114,6 +180,7 @@ function EditCerttification({show, setShow, newCert, data}){
         setPractical(true);
         setScale("");
         setDuration("");
+        setCertTrainers([]);
         setShow(false);
     }
 
@@ -173,6 +240,14 @@ function EditCerttification({show, setShow, newCert, data}){
             value = {practical} 
             onChange= { (event) => setPractical(event.target.value) }
         />
+
+    Trainers:
+    <DropdownMultiselect 
+        options={allUsers} 
+        name="trainers" 
+        selected={newCert ? [] : trainers}
+        handleOnChange= {(selected) => setCertTrainers(selected)}
+    />
 
         </Modal.Body>
         <Modal.Footer>

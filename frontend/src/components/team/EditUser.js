@@ -151,7 +151,7 @@ function EditUser({show, setShow, newUser, setNewUser, data, userCertifications}
                 }
                 //create new user certification
                 if (!found)
-                    userCerts.createData({certification_id: parseInt(selecetedCert), user_id:id}).then(res => { console.log(res)})
+                    userCerts.createData({certification_id: parseInt(selecetedCert), user_id:id});
             }
         })
     }

@@ -21,6 +21,7 @@ function Team(){
   let [user, setUser] = useState("");
   let [certification, setCertification] = useState("");
   let [userCerts, setUserCerts] = useState([]);
+  let [trainers, setTrainers] = useState ([]);
 
 
   if (firstRender){
@@ -50,14 +51,14 @@ function Team(){
       <Navigation />
       <EditUser show={showEditUser} setShow={setShowEditUser} newUser={newUser} setNewUser={setNewUser} data={user} userCertifications={userCerts}/>
       <h1>My Team</h1>
-      <EditCerttification show={showEditCert} setShow={setShowEditCert} newCert={newCert} data={certification}/>
+      <EditCerttification show={showEditCert} setShow={setShowEditCert} newCert={newCert} data={certification} trainers={trainers}/>
       {adminActions}
 
       <Search data={data} setData={setData} />
       <CertificationTable data={data} admin={admin} 
         setShowEditCert={setShowEditCert} setShowEditUser={setShowEditUser}
         setUser={setUser} setCertification={setCertification} setNewUser={setNewUser}
-        setNewCert={setNewCert} setUserCerts={setUserCerts}
+        setNewCert={setNewCert} setUserCerts={setUserCerts} setTrainers={setTrainers}
       />
     </div>
   );
