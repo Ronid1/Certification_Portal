@@ -37,7 +37,6 @@ export class CertificationsActions extends Api{
     }
 
 
-    //EDIT - not array option
     async printableDataHook(dataArray, size) {
 
         let printableData=[];

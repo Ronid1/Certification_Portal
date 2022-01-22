@@ -5,12 +5,8 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        #fields = '__all__'
         fields = ["id", "password", "email", "username"]
-        # extra_kwargs = {
-        #     "username": {User.objects}
-        # }
-
+        
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
