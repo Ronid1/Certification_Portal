@@ -65,97 +65,25 @@ function EditUser({show, setShow, newUser, setNewUser, data, userCertifications}
             role: role,
         }
 
-        let user = new UserActions();
-        let profile = new ProfilesActions();
-        let userCerts = new UserCertificationsActions();
-
-        //if new user- create user, then update profile with same id
-        if (newUser)
-            createUser(user, profile, userCerts, profileInfo);
-
-        else
-            editUser(user, profile, userCerts, profileInfo)
-
-        //zero all input and close
-        zeroAndClose();
-
-    }
-
-    //create a new user, profile and user certifications
-    async function createUser(user, profile, userCerts, profileInfo){
         let userInfo = {
             email: email,
             username: email,
             password: password,
         }
 
-        let id;
-        //create user
-        await user.createData(userInfo).then(res => {
-            //get id for profile from user
-            id = res.data.id
-        })
-        
-        //create profile
-        await profile.updateIdWithData(id, profileInfo);
+        let profile = new ProfilesActions();
+  
+        if (newUser)
+            profile.createUser(userInfo, profileInfo, certifications);
 
-        //create user-certifications
-        if (certifications.length > 0){
-            for (let cert of certifications){
-                await userCerts.createData({certification_id: parseInt(cert), user_id:id});
-            }
-        }
+        else
+            profile.edit(data.user_id, userInfo.password, profileInfo, certifications)
+
+        //zero all input and close
+        zeroAndClose();
+
     }
-
-    //edit users info, profile and certifications
-    async function editUser(user,profile,userCerts, profileInfo){
-        let id = data. user_id;
-
-        //changed password
-        if (password != "")
-            await user.updateIdWithData(id, {password: password}).then(res => (console.log(res)))
-
-        await profile.updateIdWithData(id, profileInfo).then(res => (console.log(res)));
-
-        //compare users current certifications to ones selected and add/remove as needed
-        await userCerts.findByUserId(id).then(res => {
-
-            //delete certifications
-            for (let currentCert of res){
-                let found = false;
-
-                for (let selecetedCert of certifications){
-                    //current certification was also selected
-                    if (currentCert.certification_id == parseInt(selecetedCert)){
-                        found = true;
-                        break;
-                    }
-                }
-                //current certification was no selected -> delete
-                if (!found)
-                    userCerts.DeleteId(currentCert.id)
-
-            }
-
-            //add new selected certifications
-            for (let selecetedCert of certifications){
-
-                let found = false;
-
-                for (let currentCert of res){
-                    //selected certification already exists
-                    if (currentCert.certification_id == parseInt(selecetedCert)){
-                        found = true;
-                        break;
-                    }
-                }
-                //create new user certification
-                if (!found)
-                    userCerts.createData({certification_id: parseInt(selecetedCert), user_id:id});
-            }
-        })
-    }
-
+  
     function deleteUser(){
         let user = new UserActions();
         user.DeleteId(data.user_id);
@@ -246,8 +174,8 @@ function EditUser({show, setShow, newUser, setNewUser, data, userCertifications}
             <Form.Label>Passwrod:</Form.Label>
             <Form.Control 
             type="text"
-            placeholder = "Passwrod"
-            value = {newUser? password : "**********"}
+            placeholder = {newUser? "Password" : "**********"}
+            value = {password}
             onChange= { (event) => setPassword(event.target.value) }
             />
         </Form.Group>

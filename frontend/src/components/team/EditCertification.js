@@ -105,64 +105,14 @@ function EditCerttification({show, setShow, newCert, trainers, data}){
             setShowError(true);
 
         let cert = new CertificationsActions();
-        let instructor = new InstructorsActions();
 
         let info = {name:name, practical:practical, level_scale:scale, days_valid:duration};
 
-        if (newCert){
-            let certId = await cert.createData(info).then(res => {
-                console.log(res);
-                return res.data.id;
-            })
+        if (newCert)
+            cert.createNew(info, certTrainers)
 
-            //create trainers for this certification
-            for (let user of certTrainers){
-                instructor.createData({user_id: parseInt(user), certification_id:certId})
-            }
-        }
-
-        else{
-            //edit certification data
-            cert.updateIdWithData(data.certification_id, info);
-
-            //compare certifications current instructors to ones selected and add/remove as needed
-            await instructor.findByCertId(data.certification_id).then(res => {
-
-            //delete instructor
-            for (let currentInstractor of res){
-                let found = false;
-
-                for (let selecetedInstructor of certTrainers){
-                    //current instrucot was also selected
-                    if (currentInstractor.user_id == parseInt(selecetedInstructor)){
-                        found = true;
-                        break;
-                    }
-                }
-                //current instructor was no selected -> delete
-                if (!found)
-                    instructor.DeleteId(currentInstractor.id)
-
-            }
-
-            //add new selected instroctors
-            for (let selecetedInstructor of certTrainers){
-
-                let found = false;
-
-                for (let currentInstractor of res){
-                    //selected instructor already exists
-                    if (currentInstractor.user_id == parseInt(selecetedInstructor)){
-                        found = true;
-                        break;
-                    }
-                }
-                //create new instructor
-                if (!found)
-                    instructor.createData({user_id: parseInt(selecetedInstructor), certification_id:data.certification_id})
-            }
-        })
-        }
+        else
+            cert.edit(data.certification_id, info, certTrainers);
 
         zeroAndClose();
     }
