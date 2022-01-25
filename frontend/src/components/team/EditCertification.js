@@ -188,7 +188,7 @@ function EditCerttification({show, setShow, newCert, trainers, data}){
             label="Practical" 
             defaultChecked = {data ? data.practical : true}
             value = {practical} 
-            onChange= { (event) => setPractical(event.target.value) }
+            onChange= { (event) => setPractical(event.target.checked) }
         />
 
     Trainers:
