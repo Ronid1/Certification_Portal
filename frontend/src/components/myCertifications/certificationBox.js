@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card'
 
 function CertificationBox({data}) {
     return(
-        <Card style={{ width: '18rem' }}>
+        <Card id="cert-box" style={{ width: '18rem' }}>
             <Card.Body>
                 <Card.Title>{data.name}</Card.Title>
                 <Card.Text> level: {data.level} </Card.Text>

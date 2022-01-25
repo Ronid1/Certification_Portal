@@ -11,11 +11,12 @@ import ChangePicPopUp from "./ChangePicPopUp";
 function UserInfo() {
     const userInfo = useSelector((state) => state.user.value);
     const defaultImg = '../../static/images/profile_pic.png';
+    const nullPath = 'http://127.0.0.1:8000/media/null';
     const [modalShow, setModalShow] = useState(false);
 
 
     function getImage(){
-        if (!userInfo.image)
+        if (userInfo.image == nullPath)
             return defaultImg
         
         return userInfo.image;
@@ -28,10 +29,10 @@ function UserInfo() {
     return(
         <Container>
             <Row>
-                <p>name: {userInfo.name}</p>
+                <p><b>Name:</b> {userInfo.name}</p>
             </Row>
             <Row>
-                <p>role: {userInfo.role}</p>
+                <p><b>Role:</b> {userInfo.role}</p>
             </Row>
             <Row>
                 <Col>
