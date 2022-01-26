@@ -24,8 +24,6 @@ function CertificationBox({data}) {
 
     function renewCert(){
         let userCert = new UserCertificationsActions();
-        console.log(userId)
-        console.log(data.certId)
         userCert.renewUser(userId, data.certId)
     }
 

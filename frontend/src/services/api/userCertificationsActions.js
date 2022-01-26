@@ -2,6 +2,7 @@
 import { Api, client } from "./api";
 import { ProfilesActions } from "./profilesActions";
 import { CertificationsActions } from "./certificationsActions";
+import { UserTrainingsActions } from "./userTrainingsActions"
 
 // https://daily.dev/blog/a-guide-to-writing-clean-api-calls-using-axios
 
@@ -78,6 +79,7 @@ export class UserCertificationsActions extends Api{
         return printableData;
     }
 
+    //renew all user certifications for certification id
     async renewAll(id){
         let userCerts = [];
         let today = new Date();
@@ -87,13 +89,18 @@ export class UserCertificationsActions extends Api{
             for (let data of res){
                 userCerts.push(data.id)
             }
-
-        for (let cert of userCerts)
-            this.updateIdWithData(cert, {created_on_date: date, entered_level:"Pending"})
         })
 
+        for (let cert of userCerts){
+            //update certification
+            await this.updateIdWithData(cert, {created_on_date: date, entered_level:"Pending"});
+
+            //mark trainings as incomplete
+            this.changeTrainings(cert);
+        }
     }
 
+    //renew a specific user certification
     async renewUser(user_id, certification_id){
         let today = new Date();
         let date = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
@@ -102,6 +109,28 @@ export class UserCertificationsActions extends Api{
             return res[0].id;
         })
 
-        this.updateIdWithData(userCert, {created_on_date: date, entered_level:"Pending"})
+        await this.updateIdWithData(userCert, {created_on_date: date, entered_level:"Pending"})
+
+         //mark trainings as incomplete
+         this.changeTrainings(userCert)
+    }
+
+    //helper function for renewing user certifications with trainings
+    async changeTrainings(id){
+        let training = new UserTrainingsActions();
+        let ut_id = []
+
+        await training.findByUserCert(id).then(res => { 
+            if (res.length > 0){
+                for (let ut of res)
+                    ut_id.push(ut.id)
+            } 
+        })
+
+        if (ut_id.length > 0){
+            for (let ut of ut_id)
+                await training.updateIdWithData(ut, {completed: false});
+        }
+
     }
 }

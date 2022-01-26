@@ -14,6 +14,19 @@ export class UserTrainingsActions extends Api{
         super(ENDPOINT)
     }
 
+    async findByUserCert(id){
+        let dataArray;
+        try{
+            await client.get(this.endpoint+ '/?user_certification=' +id).then(res => {
+                dataArray =  res.data;
+            });
+            return dataArray;
+        }
+        catch {
+            return null;
+        }
+    }
+
     async printableDataHook(dataArray, size, byId){
         
         let profilesList = new ProfilesActions();

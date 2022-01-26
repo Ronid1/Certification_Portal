@@ -10,7 +10,7 @@ class UserTrainingList(generics.ListCreateAPIView):
      queryset = UserTraining.objects.all()
      permission_classes = [permissions.AllowAny]
      serializer_class = UserTrainingSerializer
-     filter_fields = ['user_id']
+     filter_fields = ['user_id', 'user_certification']
 
 class UserTrainingDetail(generics.RetrieveUpdateDestroyAPIView):
      queryset = UserTraining.objects.all()
