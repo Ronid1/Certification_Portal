@@ -8,6 +8,7 @@ import { CertificationsActions } from '../../services/api/certificationsActions'
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { ProfilesActions } from '../../services/api/profilesActions';
 import { InstructorsActions } from '../../services/api/instructorsActions';
+import { UserCertificationsActions } from '../../services/api/userCertificationsActions'
 
 function EditCerttification({show, setShow, newCert, trainers, data}){
 
@@ -20,11 +21,11 @@ function EditCerttification({show, setShow, newCert, trainers, data}){
     let [scaleOptions, setScaleOptions] = useState();
     let [firstScale, setFirstScale] = useState({name: "", data:""});
     let [allUsers, setAllUsers] = useState([]);
-    let [deleteButton, setDeleteButton] = useState([]);
+    let [editButton, setEditButton] = useState([]);
 
     useEffect(() => {
         getCertData();
-        getDelete();
+        getEdit();
         getAllUsers();
     }, [data, newCert])
 
@@ -33,12 +34,20 @@ function EditCerttification({show, setShow, newCert, trainers, data}){
         getScaleOptions();
     }, [show, firstScale])
 
-    function getDelete(){
+    function getEdit(){
         if (!newCert){
-        setDeleteButton(
+        setEditButton(
+            <div id="editForm">
             <Button id="btn-primary" onClick={() => deleteCert()}> 
                 Delete this Certification
-            </Button>)
+            </Button>
+
+            <Button id="btn-primary" onClick={() => renew()}> 
+                Renew for all
+            </Button>
+            </div>
+            
+            )
 
         }
     }
@@ -124,6 +133,12 @@ function EditCerttification({show, setShow, newCert, trainers, data}){
 
     }
 
+    function renew(){
+        let usercert = new UserCertificationsActions();
+        usercert.renewAll(data.certification_id);
+        zeroAndClose();
+    }
+
 
     function zeroAndClose(){
         setName("");
@@ -146,7 +161,7 @@ function EditCerttification({show, setShow, newCert, trainers, data}){
         <p> Name and scale must have a value </p>
         </Alert>
        
-       {deleteButton}
+       {editButton}
 
         <Form.Group controlId="formLink" className="mb-3">
             <Form.Label>Name:</Form.Label>

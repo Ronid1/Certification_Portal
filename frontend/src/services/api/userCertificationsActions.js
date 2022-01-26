@@ -27,6 +27,19 @@ export class UserCertificationsActions extends Api{
         }
     }
 
+    async findByUserAndCert(user, cert){
+        let dataArray;
+        try{
+            await client.get(this.endpoint+ '/?certification_id=' +cert +'&user_id=' +user).then(res => {
+                dataArray =  res.data;
+            });
+            return dataArray;
+        }
+        catch {
+            return null;
+        }
+    }
+
     async printableDataHook(dataArray){
         let profilesList = new ProfilesActions();
         let certsList = new CertificationsActions();
@@ -63,5 +76,32 @@ export class UserCertificationsActions extends Api{
             })
         }
         return printableData;
+    }
+
+    async renewAll(id){
+        let userCerts = [];
+        let today = new Date();
+        let date = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+        await this.findByCertificationId(id).then(res => {
+            for (let data of res){
+                userCerts.push(data.id)
+            }
+
+        for (let cert of userCerts)
+            this.updateIdWithData(cert, {created_on_date: date, entered_level:"Pending"})
+        })
+
+    }
+
+    async renewUser(user_id, certification_id){
+        let today = new Date();
+        let date = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+        let userCert = await this.findByUserAndCert(user_id,certification_id).then(res => {
+            return res[0].id;
+        })
+
+        this.updateIdWithData(userCert, {created_on_date: date, entered_level:"Pending"})
     }
 }

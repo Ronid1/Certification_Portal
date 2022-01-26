@@ -31,11 +31,11 @@ function AllCertifications(){
       //add certification component to list
       for (let cert of certifications) {
         //if a cert is theoretical and pending or fail status - dont include it
-        if (!cert.practical && cert.level!='Pass'){
+        if (!cert.practical && cert.level!='Pass' && cert.days_until_expires>30){
           continue;
         }
 
-        data = {name: cert.name, level: cert.level, date: cert.created_on_date}
+        data = {name: cert.name, level: cert.level, date: cert.created_on_date, expires: cert.days_until_expires , certId: cert.id}
         certList.push(<CertificationBox key={cert.id} data = {data} />)
       }
   
